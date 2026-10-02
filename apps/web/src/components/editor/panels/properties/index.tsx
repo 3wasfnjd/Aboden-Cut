@@ -34,7 +34,7 @@ export function PropertiesPanel() {
 		return (
 			<div className="panel bg-background flex h-full flex-col items-center justify-center overflow-hidden rounded-sm border">
 				<p className="text-muted-foreground text-sm">
-					{selectedElements.length} elements selected.0
+					{selectedElements.length} عناصر محددة
 				</p>
 			</div>
 		);
@@ -62,7 +62,7 @@ export function PropertiesPanel() {
 	if (!activeTab) return null;
 
 	return (
-		<div className="panel bg-background flex h-full overflow-hidden rounded-sm border">
+		<div dir="rtl" className="panel bg-background flex h-full overflow-hidden rounded-sm border">
 			<TooltipProvider delayDuration={0}>
 				<div className="flex shrink-0 flex-col gap-0.5 border-r p-1 scrollbar-hidden overflow-y-auto">
 					{visibleTabs.map((tab) => (
