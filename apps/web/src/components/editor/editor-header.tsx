@@ -22,7 +22,7 @@ import { toast } from "sonner";
 import { useEditor } from "@/editor/use-editor";
 import { CommandIcon, Logout05Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { اختصارات لوحة المفاتيحDialog } from "@/actions/components/shortcuts-dialog";
+import { ShortcutsDialog } from "@/actions/components/shortcuts-dialog";
 import { cn } from "@/utils/ui";
 
 export function EditorHeader() {
@@ -154,7 +154,7 @@ function ProjectDropdown() {
 				onConfirm={handleDeleteProject}
 				projectNames={[activeProject?.metadata.name || ""]}
 			/>
-			<اختصارات لوحة المفاتيحDialog
+			<ShortcutsDialog
 				isOpen={openDialog === "shortcuts"}
 				onOpenChange={(isOpen) => setOpenDialog(isOpen ? "shortcuts" : null)}
 			/>
@@ -198,7 +198,7 @@ function EditableProjectName() {
 					name: newName,
 				});
 			} catch (error) {
-				toast.error("تعذر تغيير اسم المشروع", {
+				toast.error("Failed to rename project", {
 					description:
 						error instanceof Error ? error.message : "حاول مرة أخرى",
 				});
