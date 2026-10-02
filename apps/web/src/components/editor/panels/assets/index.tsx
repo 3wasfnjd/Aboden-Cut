@@ -21,15 +21,11 @@ export function AssetsPanel() {
 		stickers: <StickersView />,
 		effects: <EffectsView />,
 		transitions: (
-			<div className="text-muted-foreground p-4">
-				Transitions view coming soon...
-			</div>
+			<div className="text-muted-foreground p-4">واجهة الانتقالات قادمة قريبًا...</div>
 		),
 		captions: <Captions />,
 		adjustment: (
-			<div className="text-muted-foreground p-4">
-				Adjustment view coming soon...
-			</div>
+			<div className="text-muted-foreground p-4">واجهة الضبط قادمة قريبًا...</div>
 		),
 		settings: <SettingsView />,
 	};
@@ -38,7 +34,7 @@ export function AssetsPanel() {
 		<div className="panel bg-background flex h-full rounded-sm border overflow-hidden">
 			<TabBar />
 			<Separator orientation="vertical" />
-			<div className="flex-1 overflow-hidden">{viewMap[activeTab]}</div>
+			<div dir="rtl" className="flex-1 overflow-hidden">{viewMap[activeTab]}</div>
 		</div>
 	);
 }
