@@ -784,7 +784,7 @@ function ProjectContextMenuContent({
 				onClick={onDuplicateClick}
 			>
 				نسخ المشروع
-			</$3>
+			</ContextMenuItem>
 			<ContextMenuItem
 				icon={<HugeiconsIcon icon={InformationCircleIcon} />}
 				onClick={onInfoClick}
@@ -896,7 +896,7 @@ function ProjectMenu({
 				<DropdownMenuItem onClick={handleDuplicate}>
 					<HugeiconsIcon icon={Copy01Icon} />
 					نسخ المشروع
-				</$3>
+				</ContextMenuItem>
 				<DropdownMenuItem onClick={handleInfoClick}>
 					<HugeiconsIcon icon={InformationCircleIcon} />معلومات</DropdownMenuItem>
 				<DropdownMenuItem variant="destructive" onClick={handleDeleteClick}>
