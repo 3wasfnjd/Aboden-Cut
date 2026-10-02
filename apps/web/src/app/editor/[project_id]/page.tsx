@@ -64,13 +64,13 @@ function DegradedRendererBanner() {
 
 	return (
 		<div className="bg-accent border-b h-9 flex items-center justify-center gap-2 text-xs text-muted-foreground">
-			<span>For the best experience, open OpenCut in Chrome.</span>
+			<span>لأفضل أداء على الكمبيوتر استخدم Chrome. على الآيفون قد تختلف بعض الأدوات.</span>
 			<Button
 				variant="text"
 				size="icon"
 				className="p-0 w-auto [&_svg]:size-3.5"
 				onClick={() => setDismissed(true)}
-				aria-label="Dismiss"
+				aria-label="إغلاق"
 			>
 				<HugeiconsIcon icon={Cancel01Icon} />
 			</Button>
