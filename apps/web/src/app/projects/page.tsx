@@ -44,7 +44,7 @@ import {
 	Copy01Icon,
 	Edit03Icon,
 	ArrowDown02Icon,
-	معلوماتrmationCircleIcon,
+	InformationCircleIcon,
 } from "@hugeicons/core-free-icons";
 import { OcVideoIcon } from "@/components/icons";
 import { Label } from "@/components/ui/label";
@@ -63,8 +63,8 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { DeleteProjectDialog } from "@/project/components/delete-project-dialog";
-import { ProjectمعلوماتDialog } from "@/project/components/project-info-dialog";
-import { إعادة تسميةProjectDialog } from "@/project/components/rename-project-dialog";
+import { ProjectInfoDialog } from "@/project/components/project-info-dialog";
+import { RenameProjectDialog } from "@/project/components/rename-project-dialog";
 import { cn } from "@/utils/ui";
 import { ChangelogNotification } from "@/changelog/components/changelog-notification";
 const formatProjectDuration = ({
@@ -149,14 +149,14 @@ function ProjectsHeader() {
 							<BreadcrumbItem>
 								<BreadcrumbLink asChild>
 									<Link href="/" className="text-sm sm:text-base">
-										Home
+										الرئيسية
 									</Link>
 								</BreadcrumbLink>
 							</BreadcrumbItem>
 							<BreadcrumbSeparator />
 							<BreadcrumbItem>
 								<BreadcrumbPage className="text-sm sm:text-base font-medium">
-									All projects
+									كل المشاريع
 								</BreadcrumbPage>
 							</BreadcrumbItem>
 						</BreadcrumbList>
@@ -400,7 +400,7 @@ function ProjectActions() {
 		.filter((project) => selectedProjectIds.includes(project.id))
 		.map((project) => project.name);
 
-	const handleنسخ المشروع = async () => {
+	const handleDuplicate = async () => {
 		await duplicateProjects({ editor, ids: selectedProjectIds });
 		clearSelectedProjects();
 	};
@@ -416,7 +416,7 @@ function ProjectActions() {
 	};
 
 	const actionHandlers: Record<string, () => void> = {
-		duplicate: handleنسخ المشروع,
+		duplicate: handleDuplicate,
 		delete: handleDeleteClick,
 	};
 
@@ -544,20 +544,20 @@ function ProjectItem({
 	const isSelected = selectedProjectIdSet.has(project.id);
 	const selectedProjectCount = selectedProjectIds.length;
 	const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-	const [isإعادة تسميةDialogOpen, setIsإعادة تسميةDialogOpen] = useState(false);
+	const [isRenameDialogOpen, setIsRenameDialogOpen] = useState(false);
 	const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-	const [isمعلوماتDialogOpen, setIsمعلوماتDialogOpen] = useState(false);
+	const [isInfoDialogOpen, setIsInfoDialogOpen] = useState(false);
 	const editor = useEditor();
 	const durationLabel = formatProjectDuration({ duration: project.duration });
 	const isMultiSelect = selectedProjectCount > 1;
 	const isGridView = viewMode === "grid";
 
-	const handleإعادة تسمية = () => setIsإعادة تسميةDialogOpen(true);
-	const handleنسخ المشروع = async () => {
+	const handleRename = () => setIsRenameDialogOpen(true);
+	const handleDuplicate = async () => {
 		await duplicateProjects({ editor, ids: [project.id] });
 	};
 	const handleDeleteClick = () => setIsDeleteDialogOpen(true);
-	const handleمعلوماتClick = () => setIsمعلوماتDialogOpen(true);
+	const handleInfoClick = () => setIsInfoDialogOpen(true);
 	const handleDeleteConfirm = async () => {
 		await deleteProjects({ editor, ids: [project.id] });
 		setIsDeleteDialogOpen(false);
@@ -673,10 +673,10 @@ function ProjectItem({
 					isOpen={isDropdownOpen}
 					onOpenChange={setIsDropdownOpen}
 					variant="list"
-					onإعادة تسميةClick={handleإعادة تسمية}
-					onنسخ المشروعClick={handleنسخ المشروع}
+					onRenameClick={handleRename}
+					onDuplicateClick={handleDuplicate}
 					onDeleteClick={handleDeleteClick}
-					onمعلوماتClick={handleمعلوماتClick}
+					onInfoClick={handleInfoClick}
 				/>
 			)}
 		</div>
@@ -714,10 +714,10 @@ function ProjectItem({
 									<ProjectMenu
 										isOpen={isDropdownOpen}
 										onOpenChange={setIsDropdownOpen}
-										onإعادة تسميةClick={handleإعادة تسمية}
-										onنسخ المشروعClick={handleنسخ المشروع}
+										onRenameClick={handleRename}
+										onDuplicateClick={handleDuplicate}
 										onDeleteClick={handleDeleteClick}
-										onمعلوماتClick={handleمعلوماتClick}
+										onInfoClick={handleInfoClick}
 									/>
 								)}
 							</>
@@ -727,20 +727,20 @@ function ProjectItem({
 					</div>
 				</ContextMenuTrigger>
 				<ProjectContextMenuContent
-					onإعادة تسميةClick={handleإعادة تسمية}
-					onنسخ المشروعClick={handleنسخ المشروع}
+					onRenameClick={handleRename}
+					onDuplicateClick={handleDuplicate}
 					onDeleteClick={handleDeleteClick}
-					onمعلوماتClick={handleمعلوماتClick}
+					onInfoClick={handleInfoClick}
 				/>
 			</ContextMenu>
 
-			<إعادة تسميةProjectDialog
-				isOpen={isإعادة تسميةDialogOpen}
-				onOpenChange={setIsإعادة تسميةDialogOpen}
+			<RenameProjectDialog
+				isOpen={isRenameDialogOpen}
+				onOpenChange={setIsRenameDialogOpen}
 				projectName={project.name}
 				onConfirm={async (newName) => {
 					await renameProject({ editor, id: project.id, name: newName });
-					setIsإعادة تسميةDialogOpen(false);
+					setIsRenameDialogOpen(false);
 				}}
 			/>
 
@@ -751,9 +751,9 @@ function ProjectItem({
 				onConfirm={handleDeleteConfirm}
 			/>
 
-			<ProjectمعلوماتDialog
-				isOpen={isمعلوماتDialogOpen}
-				onOpenChange={setIsمعلوماتDialogOpen}
+			<ProjectInfoDialog
+				isOpen={isInfoDialogOpen}
+				onOpenChange={setIsInfoDialogOpen}
 				project={project}
 			/>
 		</>
@@ -761,44 +761,40 @@ function ProjectItem({
 }
 
 function ProjectContextMenuContent({
-	onإعادة تسميةClick,
-	onنسخ المشروعClick,
+	onRenameClick,
+	onDuplicateClick,
 	onDeleteClick,
-	onمعلوماتClick,
+	onInfoClick,
 }: {
-	onإعادة تسميةClick: () => void;
-	onنسخ المشروعClick: () => void;
+	onRenameClick: () => void;
+	onDuplicateClick: () => void;
 	onDeleteClick: () => void;
-	onمعلوماتClick: () => void;
+	onInfoClick: () => void;
 }) {
 	return (
 		<ContextMenuContent>
 			<ContextMenuItem
 				icon={<HugeiconsIcon icon={Edit03Icon} />}
-				onClick={onإعادة تسميةClick}
+				onClick={onRenameClick}
 			>
 				إعادة تسمية
 			</ContextMenuItem>
 			<ContextMenuItem
 				icon={<HugeiconsIcon icon={Copy01Icon} />}
-				onClick={onنسخ المشروعClick}
+				onClick={onDuplicateClick}
 			>
 				نسخ المشروع
-			</ContextMenuItem>
+			</$3>
 			<ContextMenuItem
-				icon={<HugeiconsIcon icon={معلوماتrmationCircleIcon} />}
-				onClick={onمعلوماتClick}
-			>
-				معلومات
-			</ContextMenuItem>
+				icon={<HugeiconsIcon icon={InformationCircleIcon} />}
+				onClick={onInfoClick}
+			>معلومات</ContextMenuItem>
 			<ContextMenuSeparator />
 			<ContextMenuItem
 				variant="destructive"
 				icon={<HugeiconsIcon icon={Delete02Icon} />}
 				onClick={onDeleteClick}
-			>
-				Delete
-			</ContextMenuItem>
+			>حذف</ContextMenuItem>
 		</ContextMenuContent>
 	);
 }
@@ -807,18 +803,18 @@ function ProjectMenu({
 	isOpen,
 	onOpenChange,
 	variant = "grid",
-	onإعادة تسميةClick,
-	onنسخ المشروعClick,
+	onRenameClick,
+	onDuplicateClick,
 	onDeleteClick,
-	onمعلوماتClick,
+	onInfoClick,
 }: {
 	isOpen: boolean;
 	onOpenChange: (open: boolean) => void;
 	variant?: "grid" | "list";
-	onإعادة تسميةClick: () => void;
-	onنسخ المشروعClick: () => void;
+	onRenameClick: () => void;
+	onDuplicateClick: () => void;
 	onDeleteClick: () => void;
-	onمعلوماتClick: () => void;
+	onInfoClick: () => void;
 }) {
 	const handleMenuClick = ({
 		event,
@@ -841,13 +837,13 @@ function ProjectMenu({
 		event.stopPropagation();
 	};
 
-	const handleإعادة تسمية = () => {
-		onإعادة تسميةClick();
+	const handleRename = () => {
+		onRenameClick();
 		onOpenChange(false);
 	};
 
-	const handleنسخ المشروع = () => {
-		onنسخ المشروعClick();
+	const handleDuplicate = () => {
+		onDuplicateClick();
 		onOpenChange(false);
 	};
 
@@ -856,8 +852,8 @@ function ProjectMenu({
 		onOpenChange(false);
 	};
 
-	const handleمعلوماتClick = () => {
-		onمعلوماتClick();
+	const handleInfoClick = () => {
+		onInfoClick();
 		onOpenChange(false);
 	};
 
@@ -895,22 +891,16 @@ function ProjectMenu({
 				</Button>
 			</DropdownMenuTrigger>
 			<DropdownMenuContent className="w-48" align="end">
-				<DropdownMenuItem onClick={handleإعادة تسمية}>
-					<HugeiconsIcon icon={Edit03Icon} />
-					إعادة تسمية
-				</DropdownMenuItem>
-				<DropdownMenuItem onClick={handleنسخ المشروع}>
+				<DropdownMenuItem onClick={handleRename}>
+					<HugeiconsIcon icon={Edit03Icon} />إعادة تسمية</DropdownMenuItem>
+				<DropdownMenuItem onClick={handleDuplicate}>
 					<HugeiconsIcon icon={Copy01Icon} />
 					نسخ المشروع
-				</DropdownMenuItem>
-				<DropdownMenuItem onClick={handleمعلوماتClick}>
-					<HugeiconsIcon icon={معلوماتrmationCircleIcon} />
-					معلومات
-				</DropdownMenuItem>
+				</$3>
+				<DropdownMenuItem onClick={handleInfoClick}>
+					<HugeiconsIcon icon={InformationCircleIcon} />معلومات</DropdownMenuItem>
 				<DropdownMenuItem variant="destructive" onClick={handleDeleteClick}>
-					<HugeiconsIcon icon={Delete02Icon} />
-					Delete
-				</DropdownMenuItem>
+					<HugeiconsIcon icon={Delete02Icon} />حذف</DropdownMenuItem>
 			</DropdownMenuContent>
 		</DropdownMenu>
 	);
