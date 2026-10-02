@@ -1,9 +1,7 @@
 "use client";
 
-import { ArrowRightIcon } from "lucide-react";
+import { ArrowLeftIcon } from "lucide-react";
 import { useState } from "react";
-import ReactMarkdown from "react-markdown";
-import { SOCIAL_LINKS } from "@/site/social";
 import { useLocalStorage } from "@/services/storage/use-local-storage";
 import { Button } from "../ui/button";
 import { Dialog, DialogBody, DialogContent, DialogTitle } from "../ui/dialog";
@@ -11,125 +9,55 @@ import { Dialog, DialogBody, DialogContent, DialogTitle } from "../ui/dialog";
 export function Onboarding() {
 	const [step, setStep] = useState(0);
 	const [hasSeenOnboarding, setHasSeenOnboarding] = useLocalStorage({
-		key: "hasSeenOnboarding",
+		key: "hasSeenAbodenCutOnboarding",
 		defaultValue: false,
 	});
 
-	const isOpen = !hasSeenOnboarding;
+	const steps = [
+		{
+			title: "أهلًا بك في عبودين كت",
+			description: "هذه نسختنا الخاصة من محرر الفيديو. الهدف: واجهة عربية بسيطة وسريعة تعمل من المتصفح.",
+		},
+		{
+			title: "النسخة ما زالت تطويرية",
+			description: "بعض الأدوات، خصوصًا على الجوال، تحتاج مزيدًا من التحسين. سنطورها تدريجيًا بدون كسر أساس المونتاج.",
+		},
+		{
+			title: "ابدأ بمشروع بسيط",
+			description: "ارفع فيديو أو صورة، اسحبها إلى الخط الزمني، جرّب النصوص والمؤثرات ثم استخدم زر التصدير.",
+		},
+	];
+
+	const current = steps[step] ?? steps[0];
+	const isLast = step === steps.length - 1;
 
 	const handleNext = () => {
-		setStep(step + 1);
-	};
-
-	const handleClose = () => {
-		setHasSeenOnboarding({ value: true });
-	};
-
-	const getStepTitle = () => {
-		switch (step) {
-			case 0:
-				return "Welcome to OpenCut Beta! 🎉";
-			case 1:
-				return "⚠️ This is a super early beta!";
-			case 2:
-				return "🦋 Have fun testing!";
-			default:
-				return "OpenCut Onboarding";
+		if (isLast) {
+			setHasSeenOnboarding({ value: true });
+			return;
 		}
-	};
-
-	const renderStepContent = () => {
-		switch (step) {
-			case 0:
-				return (
-					<div className="space-y-5">
-						<div className="space-y-3">
-							<Title title="Welcome to OpenCut Beta! 🎉" />
-							<Description description="You're among the first to try OpenCut - the fully open source CapCut alternative." />
-						</div>
-						<NextButton onClick={handleNext}>Next</NextButton>
-					</div>
-				);
-			case 1:
-				return (
-					<div className="space-y-5">
-						<div className="space-y-3">
-							<Title title={getStepTitle()} />
-							<Description description="There's still a ton of things to do to make this editor amazing." />
-							<Description description="A lot of features are still missing. We're working hard to build them out!" />
-							<Description description="If you're curious, check out our roadmap [here](https://opencut.app/roadmap)" />
-						</div>
-						<NextButton onClick={handleNext}>Next</NextButton>
-					</div>
-				);
-			case 2:
-				return (
-					<div className="space-y-5">
-						<div className="space-y-3">
-							<Title title={getStepTitle()} />
-							<Description
-								description={`Join our [Discord](${SOCIAL_LINKS.discord}), chat with cool people and share feedback to help make OpenCut the best editor ever.`}
-							/>
-						</div>
-						<NextButton onClick={handleClose}>Finish</NextButton>
-					</div>
-				);
-			default:
-				return null;
-		}
+		setStep((value) => value + 1);
 	};
 
 	return (
-		<Dialog open={isOpen} onOpenChange={handleClose}>
-			<DialogContent className="sm:max-w-[425px]">
-				<DialogTitle>
-					<span className="sr-only">{getStepTitle()}</span>
-				</DialogTitle>
-				<DialogBody>{renderStepContent()}</DialogBody>
+		<Dialog
+			open={!hasSeenOnboarding}
+			onOpenChange={(open) => {
+				if (!open) setHasSeenOnboarding({ value: true });
+			}}
+		>
+			<DialogContent dir="rtl" className="sm:max-w-[425px]">
+				<DialogTitle>{current.title}</DialogTitle>
+				<DialogBody>
+					<div className="space-y-5">
+						<p className="text-muted-foreground leading-7">{current.description}</p>
+						<Button onClick={handleNext} className="w-full gap-2">
+							{isLast ? "ابدأ" : "التالي"}
+							<ArrowLeftIcon className="size-4" />
+						</Button>
+					</div>
+				</DialogBody>
 			</DialogContent>
 		</Dialog>
-	);
-}
-
-function Title({ title }: { title: string }) {
-	return <h2 className="text-lg font-bold md:text-xl">{title}</h2>;
-}
-
-function Description({ description }: { description: string }) {
-	return (
-		<div className="text-muted-foreground">
-			<ReactMarkdown
-				components={{
-					p: ({ children }) => <p className="mb-0">{children}</p>,
-					a: ({ href, children }) => (
-						<a
-							href={href}
-							target="_blank"
-							rel="noopener noreferrer"
-							className="text-foreground hover:text-foreground/80 underline"
-						>
-							{children}
-						</a>
-					),
-				}}
-			>
-				{description}
-			</ReactMarkdown>
-		</div>
-	);
-}
-
-function NextButton({
-	children,
-	onClick,
-}: {
-	children: React.ReactNode;
-	onClick: () => void;
-}) {
-	return (
-		<Button onClick={onClick} variant="default" className="w-full">
-			{children}
-			<ArrowRightIcon className="size-4" />
-		</Button>
 	);
 }
